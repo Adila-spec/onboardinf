@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case File: Addepar Onboarding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#fff3ea;
+    --ink-2:#ffe4d1;
+    --panel:#fffaf6;
+    --rule:#f0b78a;
+    --paper:#1a0d05;
+    --paper-dim:#5c3c22;
+    --gold:#bf5700;
+    --gold-dim:#e37c2c;
+    --rust:#c23e12;
+    --moss:#4d7a52;
+    --shadow: 0 10px 26px rgba(200,80,20,.15);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse at top left, #ffe0c7 0%, var(--ink) 55%),
+      var(--ink);
+    color:var(--paper);
+    font-family:'Inter', sans-serif;
+    min-height:100vh;
+    padding:32px 20px 80px;
+  }
+  .wrap{max-width:920px;margin:0 auto;}
+
+  /* header / dossier plate */
+  .plate{
+    border:1px solid var(--rule);
+    background:linear-gradient(180deg, var(--ink-2), var(--panel));
+    border-radius:6px;
+    padding:26px 28px 22px;
+    position:relative;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .plate::before{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      repeating-linear-gradient(90deg, transparent 0 39px, rgba(233,227,212,.025) 39px 40px);
+    pointer-events:none;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    letter-spacing:.14em;
+    font-size:11px;
+    color:var(--gold);
+    text-transform:uppercase;
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:10px;
+  }
+  h1{
+    font-family:'Spectral', serif;
+    font-weight:600;
+    font-size:clamp(28px,4vw,40px);
+    margin:0 0 6px;
+    color:var(--paper);
+    letter-spacing:.2px;
+  }
+  .sub{
+    color:var(--paper-dim);
+    font-size:14.5px;
+    max-width:60ch;
+    line-height:1.5;
+  }
+
+  /* tabs */
+  .tabs{
+    display:flex;
+    gap:6px;
+    margin:26px 0 0;
+    position:relative;
+    z-index:1;
+  }
+  .tab{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    background:var(--ink-2);
+    color:var(--paper-dim);
+    border:1px solid var(--rule);
+    border-bottom:none;
+    padding:11px 20px 13px;
+    cursor:pointer;
+    clip-path: polygon(0 0, 100% 0, 92% 100%, 8% 100%);
+    transition:.15s ease;
+  }
+  .tab.active{
+    background:var(--panel);
+    color:var(--gold);
+  }
+  .tab:hover{color:var(--paper);}
+
+  .stage{
+    border:1px solid var(--rule);
+    background:var(--panel);
+    border-radius:0 6px 6px 6px;
+    padding:26px 28px 30px;
+    box-shadow:var(--shadow);
+    min-height:420px;
+  }
+
+  /* LEARN view */
+  .chips{
+    display:flex; flex-wrap:wrap; gap:8px;
+    margin-bottom:20px;
+  }
+  .chip{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:.04em;
+    padding:7px 13px;
+    border-radius:20px;
+    border:1px solid var(--rule);
+    background:var(--ink-2);
+    color:var(--paper-dim);
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .chip.active{
+    border-color:var(--gold-dim);
+    color:var(--gold);
+    background:rgba(201,162,39,.08);
+  }
+  .cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(250px,1fr));
+    gap:12px;
+  }
+  .card{
+    border:1px solid var(--rule);
+    background:var(--ink-2);
+    border-radius:5px;
+    padding:15px 16px;
+    cursor:pointer;
+    transition:border-color .15s ease;
+  }
+  .card:hover{border-color:var(--gold-dim);}
+  .card .term{
+    font-family:'Spectral', serif;
+    font-weight:600;
+    font-size:16.5px;
+    color:var(--paper);
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:8px;
+  }
+  .card .term .mark{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--gold-dim);
+  }
+  .card .def{
+    font-size:13.5px;
+    line-height:1.55;
+    color:var(--paper-dim);
+    margin-top:9px;
+    display:none;
+  }
+  .card.open .def{display:block;}
+  .card.open{border-color:var(--gold);}
+  .card .cat{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:9.5px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--gold-dim);
+    margin-bottom:6px;
+  }
+
+  /* EXAM view */
+  .examTop{
+    display:flex; justify-content:space-between; align-items:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--paper-dim);
+    margin-bottom:14px;
+  }
+  .bar{
+    height:5px; background:var(--ink-2); border-radius:3px; overflow:hidden;
+    margin:10px 0 26px;
+    border:1px solid var(--rule);
+  }
+  .bar > div{
+    height:100%; background:var(--gold); width:0%;
+    transition:width .3s ease;
+  }
+  .qBox .qNum{
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--gold-dim);
+    font-size:12px;
+    letter-spacing:.08em;
+  }
+  .qBox h2{
+    font-family:'Spectral', serif;
+    font-weight:500;
+    font-size:22px;
+    line-height:1.4;
+    margin:8px 0 22px;
+    color:var(--paper);
+  }
+  .opts{display:flex; flex-direction:column; gap:10px;}
+  .opt{
+    text-align:left;
+    border:1px solid var(--rule);
+    background:var(--ink-2);
+    color:var(--paper);
+    padding:13px 16px;
+    border-radius:5px;
+    font-family:'Inter', sans-serif;
+    font-size:14.5px;
+    cursor:pointer;
+    transition:.12s ease;
+  }
+  .opt:hover{border-color:var(--gold-dim);}
+  .opt.correct{border-color:var(--moss); background:rgba(77,122,82,.10); color:#2f5233;}
+  .opt.wrong{border-color:var(--rust); background:rgba(165,71,58,.10); color:#7a2e24;}
+  .opt[disabled]{cursor:default;}
+
+  .nextRow{display:flex; justify-content:flex-end; margin-top:24px;}
+  .btn{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    background:var(--gold);
+    color:#1a1400;
+    border:none;
+    padding:11px 22px;
+    border-radius:4px;
+    cursor:pointer;
+    font-weight:600;
+  }
+  .btn:disabled{opacity:.35; cursor:default;}
+  .btn.ghost{
+    background:transparent;
+    border:1px solid var(--rule);
+    color:var(--paper-dim);
+  }
+
+  /* Results */
+  .results{text-align:center; padding:10px 0 4px;}
+  .stampWrap{
+    position:relative;
+    display:inline-block;
+    margin:6px 0 26px;
+  }
+  .stamp{
+    font-family:'Spectral', serif;
+    font-weight:700;
+    font-size:30px;
+    letter-spacing:.06em;
+    border:4px solid var(--rust);
+    color:var(--rust);
+    padding:12px 26px;
+    border-radius:8px;
+    transform:rotate(-6deg) scale(0);
+    text-transform:uppercase;
+    display:inline-block;
+    animation:stampIn .35s cubic-bezier(.2,1.4,.4,1) forwards;
+    animation-delay:.15s;
+  }
+  .stamp.pass{border-color:var(--moss); color:var(--moss);}
+  @keyframes stampIn{
+    to{ transform:rotate(-6deg) scale(1); }
+  }
+  .scoreLine{
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--paper-dim);
+    font-size:14px;
+    margin-bottom:26px;
+  }
+  .review{
+    text-align:left;
+    border-top:1px solid var(--rule);
+    padding-top:18px;
+    margin-top:6px;
+  }
+  .review h3{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--gold-dim);
+    margin-bottom:12px;
+  }
+  .revItem{
+    border-left:2px solid var(--rule);
+    padding:4px 0 4px 14px;
+    margin-bottom:14px;
+    font-size:13.5px;
+    line-height:1.5;
+  }
+  .revItem.miss{border-left-color:var(--rust);}
+  .revItem .rq{color:var(--paper); font-weight:600; margin-bottom:3px;}
+  .revItem .ra{color:var(--paper-dim);}
+
+  .footNote{
+    text-align:center;
+    color:var(--paper-dim);
+    font-size:12px;
+    margin-top:22px;
+    font-family:'IBM Plex Mono', monospace;
+  }
+
+  @media (max-width:560px){
+    .plate, .stage{padding:20px;}
+    .tab{padding:10px 12px 12px; font-size:11px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="plate">
+    <div class="eyebrow"><span>CASE FILE NO. K-2026-17</span><span>KESTRA &rarr; ADDEPAR PROGRAM</span></div>
+    <h1>Onboarding Dossier</h1>
+    <div class="sub">A field guide to the terms, files, and people you'll hear about in your first weeks &mdash; then a checkpoint exam to see what's sticking.</div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" data-view="learn">Learn</div>
+    <div class="tab" data-view="exam">Exam</div>
+  </div>
+
+  <div class="stage">
+
+    <!-- LEARN VIEW -->
+    <div id="learnView">
+      <div class="chips" id="chips"></div>
+      <div class="cards" id="cards"></div>
+    </div>
+
+    <!-- EXAM VIEW -->
+    <div id="examView" style="display:none;">
+
+      <div id="examIntro">
+        <p style="line-height:1.6; color:var(--paper-dim); font-size:14.5px; max-width:56ch;">
+          20 questions, pulled straight from the dossier. No time limit &mdash; this is for you, not a test anyone will grade.
+        </p>
+        <button class="btn" id="startExam" style="margin-top:14px;">Begin Exam</button>
+      </div>
+
+      <div id="examBody" style="display:none;">
+        <div class="examTop">
+          <span id="qCounter">Question 1 / 20</span>
+          <span id="scoreLive">Score: 0</span>
+        </div>
+        <div class="bar"><div id="barFill"></div></div>
+
+        <div class="qBox">
+          <div class="qNum" id="qCatLabel"></div>
+          <h2 id="qText"></h2>
+          <div class="opts" id="opts"></div>
+        </div>
+
+        <div class="nextRow">
+          <button class="btn" id="nextBtn" disabled>Next</button>
+        </div>
+      </div>
+
+      <div id="examResults" style="display:none;"></div>
+    </div>
+
+  </div>
+
+  <div class="footNote">Built from the meeting notes &mdash; not official Addepar or Kestra documentation.</div>
+</div>
+
+<script>
+const TERMS = [
+  // People
+  {cat:"People", term:"Grace", def:"The Product Owner. Owns requirements and wrote most of the existing documentation. Your go-to for Addepar access requests."},
+  {cat:"People", term:"Tally", def:"Data Analyst on the Kestra data team. The person to ask for file/notebook access, workspace clones, and status codes."},
+  {cat:"People", term:"Diego", def:"Business Analyst on the program."},
+  {cat:"People", term:"Rajesh Singh", def:"The Kestra-side manager."},
+  {cat:"People", term:"Arun Shanker", def:"Incoming senior/technical lead (\u201ctech guru\u201d), relocating to Dallas, expected to champion dev efficiency and design docs."},
+  {cat:"People", term:"Gowri (Gowripriya Patibandala)", def:"Outgoing analyst. Praised for strong analysis, but criticized for not being vocal enough about her findings, and she lacked write access to act on what she found."},
+
+  // Program
+  {cat:"Program", term:"Kestra", def:"The client: a wealth management firm implementing Addepar as its next-gen client portal and performance platform."},
+  {cat:"Program", term:"Addepar", def:"The platform Kestra is moving to, for reporting, performance, and as the client-facing portal. Replaces eMoney and Black Diamond."},
+  {cat:"Program", term:"eMoney / Black Diamond", def:"The legacy platforms being replaced by Addepar."},
+  {cat:"Program", term:"Pilot Firms", def:"The initial 17 firms in scope, limited to NFS custodian data. New firms onboard at roughly 5\u20136 per month over the ~4\u20135 month program."},
+  {cat:"Program", term:"Direct Business", def:"Accounts held at custodians other than NFS (e.g. Schwab). Out of scope during the pilot, planned to come in around October."},
+
+  // Custodians
+  {cat:"Custodians", term:"Custodian", def:"The institution that actually holds a client's assets (e.g. NFS, Schwab). Determines which data pipeline and rules apply to an account."},
+  {cat:"Custodians", term:"NFS", def:"National Financial Services \u2014 the primary custodian currently in scope, and the source of the rep code data used for access control."},
+
+  // Household concepts
+  {cat:"Household Concepts", term:"Household", def:"A logical grouping of one or more clients. Formed primarily by joint account ownership; falls back to shared address, or defaults to a single-person household."},
+  {cat:"Household Concepts", term:"TIN (Client TIN)", def:"Tax ID Number \u2014 the primary identifier for a client entity record."},
+  {cat:"Household Concepts", term:"Entity ID", def:"An identifier for a client record. The same person can end up with multiple entity IDs if they exist in multiple source systems (e.g. NFS and Schwab)."},
+  {cat:"Household Concepts", term:"Surviving Entity ID", def:"The single master entity ID chosen, via survivorship rules, to represent a client once duplicate TINs/entity IDs across systems are merged."},
+  {cat:"Household Concepts", term:"Joint Identifier", def:"An ID built by concatenating the surviving entity IDs of joint account holders \u2014 used to construct joint-household relationships."},
+
+  // Access & visibility
+  {cat:"Access & Visibility", term:"Rep Code", def:"A code tied to an advisor. Drives which accounts and households a user is allowed to see, sourced from NFS/Snowflake data."},
+  {cat:"Access & Visibility", term:"Viewable Groups", def:"The mapping of users to rep codes that controls account and household visibility. Also the name of one of the 4 daily files sent to Addepar."},
+  {cat:"Access & Visibility", term:"Portfolio", def:"The set of accounts and households associated with a given contact."},
+  {cat:"Access & Visibility", term:"Branch Relationships", def:"The advisor hierarchy structure, used alongside rep codes to work out access when a single rep code isn't enough."},
+
+  // Pipeline & files
+  {cat:"Pipeline & Files", term:"Ownership Structure (file)", def:"One of the 4 daily files sent to Addepar; defines the final household groupings."},
+  {cat:"Pipeline & Files", term:"Users (file)", def:"One of the 4 daily files; contains records for Kestra staff, advisors, and end clients."},
+  {cat:"Pipeline & Files", term:"Contacts (file)", def:"One of the 4 daily files; each account gets one designated primary contact."},
+  {cat:"Pipeline & Files", term:"Config File", def:"The internal staging file that pulls in source data (Salesforce, IDM, etc.) \u2014 the starting point of the pipeline."},
+  {cat:"Pipeline & Files", term:"Ownership Stage (file)", def:"An intermediate staging file that applies the household-forming rules (joint account \u2192 address \u2192 single person) before the final Ownership Structure file is built."},
+  {cat:"Pipeline & Files", term:"K3Pclean", def:"The layer where already-cleaned source data lives, used to build the pipeline's tables."},
+  {cat:"Pipeline & Files", term:"K3Psource", def:"A more raw underlying source data layer; access to it was still being requested in the notes."},
+  {cat:"Pipeline & Files", term:"STM (Source-to-Target Mapping)", def:"Documentation showing exactly where each field comes from and where it lands in the target tables."},
+
+  // Logic vs tools
+  {cat:"Logic vs. Tools", term:"Householding Logic", def:"The set of rules that decides how clients get grouped into households. The single biggest source of gaps and service tickets on the program."},
+  {cat:"Logic vs. Tools", term:"Manual Override", def:"The current manual fix used when automated logic misses an account or trust, or gets a household wrong. Described as tedious \u2014 a prime target for automation."},
+  {cat:"Logic vs. Tools", term:"Group Automation", def:"An Addepar-native feature that can merge accounts/households automatically, but currently can't distinguish merging at the household level vs. the client level \u2014 a live open gap."},
+  {cat:"Logic vs. Tools", term:"Logic Enhancement", def:"A change made to the core pipeline/logic itself, as opposed to a workaround or manual process."},
+  {cat:"Logic vs. Tools", term:"Utility", def:"A custom-built tool created to handle something Addepar can't do natively, when a full logic enhancement isn't justified."},
+
+  // Tooling
+  {cat:"Tooling", term:"Databricks", def:"The primary platform used to build the data notebooks and pipelines that generate the daily files."},
+  {cat:"Tooling", term:"Genie", def:"Databricks' AI assistant \u2014 lets you ask questions in plain language and get generated code/queries instead of writing them by hand."},
+  {cat:"Tooling", term:"Azure DevOps", def:"Used for CI/CD around the Databricks codebase (the team is not using Jenkins or Terraform)."},
+  {cat:"Tooling", term:"Snowflake", def:"Source database joined with contact/account tables to resolve rep codes and access mappings."},
+  {cat:"Tooling", term:"Ignite", def:"A SharePoint folder used by advisors to transfer files during the Black Diamond \u2192 Addepar migration."},
+];
+
+const CATS = [...new Set(TERMS.map(t=>t.cat))];
+
+// ---------- LEARN VIEW ----------
+const chipsEl = document.getElementById('chips');
+const cardsEl = document.getElementById('cards');
+let activeCat = "All";
+
+function renderChips(){
+  const all = ["All", ...CATS];
+  chipsEl.innerHTML = all.map(c =>
+    `<div class="chip ${c===activeCat?'active':''}" data-cat="${c}">${c}</div>`
+  ).join('');
+  chipsEl.querySelectorAll('.chip').forEach(ch=>{
+    ch.addEventListener('click', ()=>{
+      activeCat = ch.dataset.cat;
+      renderChips();
+      renderCards();
+    });
+  });
+}
+
+function renderCards(){
+  const list = TERMS.filter(t => activeCat==="All" || t.cat===activeCat);
+  cardsEl.innerHTML = list.map((t,i)=>`
+    <div class="card" data-i="${TERMS.indexOf(t)}">
+      <div class="cat">${t.cat}</div>
+      <div class="term">${t.term} <span class="mark">tap</span></div>
+      <div class="def">${t.def}</div>
+    </div>
+  `).join('');
+  cardsEl.querySelectorAll('.card').forEach(c=>{
+    c.addEventListener('click', ()=> c.classList.toggle('open'));
+  });
+}
+renderChips();
+renderCards();
+
+// ---------- TABS ----------
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    const v = tab.dataset.view;
+    document.getElementById('learnView').style.display = v==='learn' ? 'block' : 'none';
+    document.getElementById('examView').style.display = v==='exam' ? 'block' : 'none';
+  });
+});
+
+// ---------- EXAM ----------
+const QUESTIONS = [
+  {cat:"Household Concepts", q:"What determines how a household is formed if there's no joint account?", opts:["Shared address","Rep code","Custodian name","Account number"], a:0},
+  {cat:"Household Concepts", q:"What is a Surviving Entity ID?", opts:["A code for closed accounts","The master entity ID chosen to represent a client after duplicates are merged","The rep code of the primary advisor","A random unique key"], a:1},
+  {cat:"Household Concepts", q:"A Joint Identifier is built by:", opts:["Averaging account balances","Concatenating surviving entity IDs of joint holders","Matching TINs only","Looking up branch relationships"], a:1},
+  {cat:"Household Concepts", q:"What does TIN stand for in this context?", opts:["Total Investment Number","Trust Identification Number","Tax ID Number","Transfer Instruction Number"], a:2},
+  {cat:"Access & Visibility", q:"Rep codes are primarily sourced from which custodian's data?", opts:["Schwab","NFS","Fidelity","TD Ameritrade"], a:1},
+  {cat:"Access & Visibility", q:"Viewable Groups control:", opts:["Which accounts/households a user can see","How fast files are sent to Addepar","Which custodian an account belongs to","The color coding in Databricks"], a:0},
+  {cat:"Access & Visibility", q:"A Portfolio, in this context, refers to:", opts:["An advisor's personal investments","The accounts and households linked to a contact","A single joint account","A dashboard in Databricks"], a:1},
+  {cat:"Custodians", q:"NFS is best described as:", opts:["A software vendor","A custodian holding client assets","An internal Kestra team","A file format"], a:1},
+  {cat:"Custodians", q:"\"Direct Business\" refers to:", opts:["Accounts at custodians other than NFS","Advisors who work without a firm","Manual data entry tickets","Client-facing sales calls"], a:0},
+  {cat:"Program", q:"Addepar is replacing which two platforms?", opts:["Salesforce and Snowflake","eMoney and Black Diamond","Jira and Confluence","Airflow and Databricks"], a:1},
+  {cat:"Program", q:"How many pilot firms are currently in scope?", opts:["4","10","17","25"], a:2},
+  {cat:"Program", q:"Roughly how many new firms onboard per month?", opts:["1","5\u20136","15","20"], a:1},
+  {cat:"Pipeline & Files", q:"How many files are sent daily to Addepar?", opts:["2","4","7","10"], a:1},
+  {cat:"Pipeline & Files", q:"Which of these is NOT one of the 4 daily files?", opts:["Ownership Structure","Contacts","Config","Users"], a:2},
+  {cat:"Pipeline & Files", q:"The Config file's main job is to:", opts:["Send final files to Addepar","Pull in source data like Salesforce and IDM to start the pipeline","Store advisor passwords","Track service tickets"], a:1},
+  {cat:"Pipeline & Files", q:"STM stands for:", opts:["Source-to-Target Mapping","System Testing Module","Standard Transfer Method","Snowflake Table Manager"], a:0},
+  {cat:"Logic vs. Tools", q:"What is the biggest source of service tickets on this program?", opts:["Login issues","Householding logic gaps","Slow file uploads","Custodian outages"], a:1},
+  {cat:"Logic vs. Tools", q:"A 'Logic Enhancement' means:", opts:["A change to the core pipeline logic itself","A one-off manual fix","A new hire","A UI color update"], a:0},
+  {cat:"Logic vs. Tools", q:"Group Automation currently struggles to distinguish between:", opts:["Two different custodians","Merging at the household level vs. the client level","Test data and production data","Rep codes and branch codes"], a:1},
+  {cat:"Tooling", q:"What does Genie do in Databricks?", opts:["Encrypts files automatically","Generates code/queries from plain-language questions","Sends daily emails to advisors","Replaces Azure DevOps"], a:1},
+];
+
+let order = [];
+let idx = 0;
+let score = 0;
+let answered = false;
+let missed = [];
+
+function shuffle(arr){
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+document.getElementById('startExam').addEventListener('click', ()=>{
+  order = shuffle(QUESTIONS);
+  idx = 0; score = 0; missed = [];
+  document.getElementById('examIntro').style.display='none';
+  document.getElementById('examResults').style.display='none';
+  document.getElementById('examBody').style.display='block';
+  renderQuestion();
+});
+
+function renderQuestion(){
+  answered = false;
+  const total = order.length;
+  const q = order[idx];
+  document.getElementById('qCounter').textContent = `Question ${idx+1} / ${total}`;
+  document.getElementById('scoreLive').textContent = `Score: ${score}`;
+  document.getElementById('barFill').style.width = `${(idx/total)*100}%`;
+  document.getElementById('qCatLabel').textContent = q.cat.toUpperCase();
+  document.getElementById('qText').textContent = q.q;
+  const optsEl = document.getElementById('opts');
+  optsEl.innerHTML = q.opts.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join('');
+  document.getElementById('nextBtn').disabled = true;
+
+  optsEl.querySelectorAll('.opt').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(answered) return;
+      answered = true;
+      const chosen = parseInt(btn.dataset.i);
+      const correct = q.a;
+      optsEl.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+      if(chosen === correct){
+        btn.classList.add('correct');
+        score++;
+      } else {
+        btn.classList.add('wrong');
+        optsEl.children[correct].classList.add('correct');
+        missed.push({q:q.q, correct:q.opts[correct]});
+      }
+      document.getElementById('scoreLive').textContent = `Score: ${score}`;
+      document.getElementById('nextBtn').disabled = false;
+    });
+  });
+}
+
+document.getElementById('nextBtn').addEventListener('click', ()=>{
+  idx++;
+  if(idx >= order.length){
+    showResults();
+  } else {
+    renderQuestion();
+  }
+});
+
+function showResults(){
+  document.getElementById('examBody').style.display='none';
+  const total = order.length;
+  const pct = Math.round((score/total)*100);
+  const pass = pct >= 70;
+  const stampText = pass ? "Cleared" : "Review Needed";
+
+  let reviewHTML = '';
+  if(missed.length){
+    reviewHTML = `<div class="review"><h3>Worth another look</h3>` +
+      missed.map(m=>`<div class="revItem miss"><div class="rq">${m.q}</div><div class="ra">Answer: ${m.correct}</div></div>`).join('') +
+      `</div>`;
+  } else {
+    reviewHTML = `<div class="review"><h3>Nothing missed</h3><div class="revItem"><div class="ra">Clean sweep. Nicely done.</div></div></div>`;
+  }
+
+  document.getElementById('examResults').innerHTML = `
+    <div class="results">
+      <div class="stampWrap"><div class="stamp ${pass?'pass':''}">${stampText}</div></div>
+      <div class="scoreLine">${score} / ${total} correct &nbsp;&middot;&nbsp; ${pct}%</div>
+      <button class="btn ghost" id="retryBtn">Take Again</button>
+      ${reviewHTML}
+    </div>
+  `;
+  document.getElementById('examResults').style.display='block';
+  document.getElementById('retryBtn').addEventListener('click', ()=>{
+    document.getElementById('examResults').style.display='none';
+    document.getElementById('examIntro').style.display='block';
+  });
+}
+</script>
+</body>
+</html>
