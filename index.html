@@ -5,26 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Case File: Addepar Onboarding</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#fff3ea;
-    --ink-2:#ffe4d1;
-    --panel:#fffaf6;
-    --rule:#f0b78a;
-    --paper:#1a0d05;
-    --paper-dim:#5c3c22;
+    --ink:#f7f1e4;
+    --ink-2:#efe3ca;
+    --panel:#fffcf5;
+    --rule:#ddc9a3;
+    --paper:#241a0f;
+    --paper-dim:#6b5a42;
     --gold:#bf5700;
-    --gold-dim:#e37c2c;
-    --rust:#c23e12;
-    --moss:#4d7a52;
-    --shadow: 0 10px 26px rgba(200,80,20,.15);
+    --gold-dim:#d97a3d;
+    --rust:#9c3a28;
+    --moss:#43683f;
+    --shadow: 0 12px 28px rgba(120,80,30,.12);
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
     background:
-      radial-gradient(ellipse at top left, #ffe0c7 0%, var(--ink) 55%),
+      radial-gradient(ellipse at top left, #f2e5cc 0%, var(--ink) 60%),
       var(--ink);
     color:var(--paper);
     font-family:'Inter', sans-serif;
@@ -60,7 +60,7 @@
     margin-bottom:10px;
   }
   h1{
-    font-family:'Spectral', serif;
+    font-family:'Fraunces', serif;
     font-weight:600;
     font-size:clamp(28px,4vw,40px);
     margin:0 0 6px;
@@ -131,7 +131,7 @@
   .chip.active{
     border-color:var(--gold-dim);
     color:var(--gold);
-    background:rgba(201,162,39,.08);
+    background:rgba(179,137,74,.10);
   }
   .cards{
     display:grid;
@@ -148,7 +148,7 @@
   }
   .card:hover{border-color:var(--gold-dim);}
   .card .term{
-    font-family:'Spectral', serif;
+    font-family:'Fraunces', serif;
     font-weight:600;
     font-size:16.5px;
     color:var(--paper);
@@ -180,6 +180,49 @@
     margin-bottom:6px;
   }
 
+  /* NOTES view */
+  .noteSection{
+    border:1px solid var(--rule);
+    background:var(--ink-2);
+    border-radius:5px;
+    margin-bottom:10px;
+    overflow:hidden;
+  }
+  .noteHead{
+    padding:15px 18px;
+    cursor:pointer;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+  }
+  .noteHead .htitle{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:17px;
+    color:var(--paper);
+  }
+  .noteHead .harrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--gold-dim);
+    transition:transform .15s ease;
+  }
+  .noteSection.open .harrow{ transform:rotate(90deg); }
+  .noteBody{
+    display:none;
+    padding:0 18px 18px;
+    font-size:14px;
+    line-height:1.7;
+    color:var(--paper-dim);
+  }
+  .noteSection.open .noteBody{display:block;}
+  .noteSection.open{border-color:var(--gold-dim);}
+  .noteBody strong{color:var(--paper);}
+  .noteBody ul{margin:6px 0 10px; padding-left:20px;}
+  .noteBody li{margin-bottom:6px;}
+  .noteBody p{margin:0 0 10px;}
+
   /* EXAM view */
   .examTop{
     display:flex; justify-content:space-between; align-items:center;
@@ -204,7 +247,7 @@
     letter-spacing:.08em;
   }
   .qBox h2{
-    font-family:'Spectral', serif;
+    font-family:'Fraunces', serif;
     font-weight:500;
     font-size:22px;
     line-height:1.4;
@@ -225,8 +268,8 @@
     transition:.12s ease;
   }
   .opt:hover{border-color:var(--gold-dim);}
-  .opt.correct{border-color:var(--moss); background:rgba(77,122,82,.10); color:#2f5233;}
-  .opt.wrong{border-color:var(--rust); background:rgba(165,71,58,.10); color:#7a2e24;}
+  .opt.correct{border-color:var(--moss); background:rgba(67,104,63,.10); color:#274624;}
+  .opt.wrong{border-color:var(--rust); background:rgba(156,58,40,.10); color:#6e2317;}
   .opt[disabled]{cursor:default;}
 
   .nextRow{display:flex; justify-content:flex-end; margin-top:24px;}
@@ -236,7 +279,7 @@
     letter-spacing:.08em;
     text-transform:uppercase;
     background:var(--gold);
-    color:#1a1400;
+    color:#161c24;
     border:none;
     padding:11px 22px;
     border-radius:4px;
@@ -258,7 +301,7 @@
     margin:6px 0 26px;
   }
   .stamp{
-    font-family:'Spectral', serif;
+    font-family:'Fraunces', serif;
     font-weight:700;
     font-size:30px;
     letter-spacing:.06em;
@@ -332,6 +375,7 @@
 
   <div class="tabs">
     <div class="tab active" data-view="learn">Learn</div>
+    <div class="tab" data-view="notes">Notes</div>
     <div class="tab" data-view="exam">Exam</div>
   </div>
 
@@ -343,12 +387,17 @@
       <div class="cards" id="cards"></div>
     </div>
 
+    <!-- NOTES VIEW -->
+    <div id="notesView" style="display:none;">
+      <div id="notesList"></div>
+    </div>
+
     <!-- EXAM VIEW -->
     <div id="examView" style="display:none;">
 
       <div id="examIntro">
         <p style="line-height:1.6; color:var(--paper-dim); font-size:14.5px; max-width:56ch;">
-          20 questions, pulled straight from the dossier. No time limit &mdash; this is for you, not a test anyone will grade.
+          <span id="qTotalLabel">35</span> questions, covering both the glossary terms and the meeting notes. No time limit &mdash; this is for you, not a test anyone will grade.
         </p>
         <button class="btn" id="startExam" style="margin-top:14px;">Begin Exam</button>
       </div>
@@ -382,12 +431,16 @@
 <script>
 const TERMS = [
   // People
-  {cat:"People", term:"Grace", def:"The Product Owner. Owns requirements and wrote most of the existing documentation. Your go-to for Addepar access requests."},
+  {cat:"People", term:"Grace", def:"The Product Owner. Coordinates Addepar and Databricks access requests, and will share the SharePoint onboarding-progress tracker once a laptop is issued."},
   {cat:"People", term:"Tally", def:"Data Analyst on the Kestra data team. The person to ask for file/notebook access, workspace clones, and status codes."},
-  {cat:"People", term:"Diego", def:"Business Analyst on the program."},
+  {cat:"People", term:"Diego", def:"Business Analyst \u2014 historically wrote roughly 90% of existing documentation and bridges developers and Kestra. His last working day is the same day as the team's training session; who backfills the requirements-gathering role after that is still unresolved."},
   {cat:"People", term:"Rajesh Singh", def:"The Kestra-side manager."},
-  {cat:"People", term:"Arun Shanker", def:"Incoming senior/technical lead (\u201ctech guru\u201d), relocating to Dallas, expected to champion dev efficiency and design docs."},
-  {cat:"People", term:"Gowri (Gowripriya Patibandala)", def:"Outgoing analyst. Praised for strong analysis, but criticized for not being vocal enough about her findings, and she lacked write access to act on what she found."},
+  {cat:"People", term:"Arun Shankar", def:"Incoming senior/technical lead (\u201ctech guru\u201d), relocating from India to Dallas full-time. Will help with design documents and workflow diagrams, and champion dev efficiency."},
+  {cat:"People", term:"Gowri (Gowripriya Patibandala)", def:"Outgoing analyst (visa issues). Praised for strong analysis, but criticized for not being vocal enough about her findings, and she lacked write access to act on what she found. Also flagged as unclear on where certain source files originate."},
+  {cat:"People", term:"Shashidhar Babu Devarakondu (\u201cSashee\u201d)", def:"Leads the data quality / production pipeline / tech stack discussions \u2014 data quality checks, CI/CD planning, Databricks ramp-up."},
+  {cat:"People", term:"Kristina", def:"Manages the servicing team's triage board \u2014 reviews incoming tickets and assigns them to data analysts/engineers."},
+  {cat:"People", term:"Kyle", def:"To be looped in with the full, consolidated list of everything the team wants an advisor to be able to do \u2014 the advisor-facing requirements list."},
+  {cat:"People", term:"Brandon", def:"Has flagged that the September 10 deadline is too tight given current access and tooling gaps."},
 
   // Program
   {cat:"Program", term:"Kestra", def:"The client: a wealth management firm implementing Addepar as its next-gen client portal and performance platform."},
@@ -417,10 +470,10 @@ const TERMS = [
   {cat:"Pipeline & Files", term:"Ownership Structure (file)", def:"One of the 4 daily files sent to Addepar; defines the final household groupings."},
   {cat:"Pipeline & Files", term:"Users (file)", def:"One of the 4 daily files; contains records for Kestra staff, advisors, and end clients."},
   {cat:"Pipeline & Files", term:"Contacts (file)", def:"One of the 4 daily files; each account gets one designated primary contact."},
-  {cat:"Pipeline & Files", term:"Config File", def:"The internal staging file that pulls in source data (Salesforce, IDM, etc.) \u2014 the starting point of the pipeline."},
-  {cat:"Pipeline & Files", term:"Ownership Stage (file)", def:"An intermediate staging file that applies the household-forming rules (joint account \u2192 address \u2192 single person) before the final Ownership Structure file is built."},
+  {cat:"Pipeline & Files", term:"Config File", def:"The internal staging file that pulls in source data from AdvisorComplete, Salesforce, and IDM \u2014 the starting point of the pipeline. Produces two target tables: the Addepar Account List and the Ownership/Household mapping."},
+  {cat:"Pipeline & Files", term:"Ownership Stage (file)", def:"Applies the household-forming rules, in order: (1) group by client first/last name, (2) joint account ownership if present, (3) otherwise look up a secondary address, with individuals defaulting to a single-person household."},
   {cat:"Pipeline & Files", term:"K3Pclean", def:"The layer where already-cleaned source data lives, used to build the pipeline's tables."},
-  {cat:"Pipeline & Files", term:"K3Psource", def:"A more raw underlying source data layer; access to it was still being requested in the notes."},
+  {cat:"Pipeline & Files", term:"K3Psource", def:"A more raw underlying source data layer, possibly needed for account-pull logic on the initial config page; access to it was still being requested."},
   {cat:"Pipeline & Files", term:"STM (Source-to-Target Mapping)", def:"Documentation showing exactly where each field comes from and where it lands in the target tables."},
 
   // Logic vs tools
@@ -436,6 +489,12 @@ const TERMS = [
   {cat:"Tooling", term:"Azure DevOps", def:"Used for CI/CD around the Databricks codebase (the team is not using Jenkins or Terraform)."},
   {cat:"Tooling", term:"Snowflake", def:"Source database joined with contact/account tables to resolve rep codes and access mappings."},
   {cat:"Tooling", term:"Ignite", def:"A SharePoint folder used by advisors to transfer files during the Black Diamond \u2192 Addepar migration."},
+  {cat:"Tooling", term:"IDM", def:"A source system referenced for rep code and relationship mapping, and one of the feeds into the Config file. The exact product behind the name is still unconfirmed."},
+  {cat:"Tooling", term:"ADX (Azure Data Explorer)", def:"Being set up to pull data from storage buckets. Currently Databricks-only work; not yet integrated with Airflow."},
+  {cat:"Tooling", term:"Airflow", def:"Open-source orchestration tool being brought in (AWS-hosted) to handle overall pipeline orchestration, separate from Databricks itself."},
+  {cat:"Tooling", term:"AdvisorComplete", def:"One of the three \u201cclean\u201d source systems (alongside Salesforce and IDM) that feed the Config file."},
+  {cat:"Tooling", term:"SonarQube", def:"Code quality tool mentioned alongside Jira as part of the tech stack; adoption status is still an open item to confirm."},
+  {cat:"Tooling", term:"Bitbucket vs. GitHub", def:"Source control was an open question early on; later notes confirm GitHub as the source control standard, alongside Azure DevOps for CI/CD."},
 ];
 
 const CATS = [...new Set(TERMS.map(t=>t.cat))];
@@ -482,9 +541,175 @@ document.querySelectorAll('.tab').forEach(tab=>{
     tab.classList.add('active');
     const v = tab.dataset.view;
     document.getElementById('learnView').style.display = v==='learn' ? 'block' : 'none';
+    document.getElementById('notesView').style.display = v==='notes' ? 'block' : 'none';
     document.getElementById('examView').style.display = v==='exam' ? 'block' : 'none';
   });
 });
+
+// ---------- NOTES ----------
+const NOTES = [
+  {title:"Program Overview", body:`
+    <p>Kestra Financial is implementing <strong>Addepar</strong> as its next-gen client portal and performance platform, replacing <strong>eMoney</strong> and <strong>Black Diamond</strong>. It serves advisors and end clients across Kestra Financial (e.g. Blue Spring Wealth Partners, JCL Financial Group).</p>
+    <ul>
+      <li>Current scope: <strong>17 pilot firms</strong>, using only <strong>NFS</strong> custodian data.</li>
+      <li>Program runs <strong>4&ndash;5 months</strong>; new firms onboard monthly (~5&ndash;6 firms/month).</li>
+      <li>By <strong>October</strong>, scope expands to <strong>direct business</strong> &mdash; custodians other than NFS (e.g. Schwab) &mdash; for all firms.</li>
+      <li>The PRD is locked and cannot be edited.</li>
+      <li>Addepar's own team ingests the daily files and runs their own validation; the two teams meet internally <strong>Monday/Wednesday/Friday</strong>.</li>
+      <li>Firm onboarding progress is tracked in a separate SharePoint sheet &mdash; Grace will share access once a laptop is issued.</li>
+    </ul>
+  `},
+  {title:"People & Roles", body:`
+    <ul>
+      <li><strong>Grace</strong> &mdash; Product Owner. Coordinates Addepar and Databricks access requests, and manages the onboarding-progress SharePoint tracker.</li>
+      <li><strong>Tally</strong> &mdash; Data Analyst. Go-to for file/notebook access, workspace clones, status codes.</li>
+      <li><strong>Diego</strong> &mdash; Business Analyst. Historically wrote ~90% of documentation and bridges developers and Kestra. His last working day is the team's training day &mdash; who backfills requirements-gathering after that is unresolved.</li>
+      <li><strong>Rajesh Singh</strong> &mdash; Kestra-side manager.</li>
+      <li><strong>Arun Shankar</strong> &mdash; Incoming technical lead, relocating from India to Dallas, full-time. Will help with design docs/workflow diagrams and champion dev efficiency.</li>
+      <li><strong>Gowripriya Patibandala (Gowri)</strong> &mdash; Outgoing (visa issues). Strong analytical work, but criticized for not being vocal about findings/root causes; lacked write access; also unclear on where certain source files originate.</li>
+      <li><strong>Shashidhar Babu Devarakondu ("Sashee")</strong> &mdash; Leads the data quality / production pipeline / tech stack discussions.</li>
+      <li><strong>Brandon</strong> &mdash; Has flagged that a September 10 deadline is too tight.</li>
+      <li><strong>Kristina</strong> &mdash; Owns the servicing team's triage board; reviews and assigns tickets.</li>
+      <li><strong>Kyle</strong> &mdash; To be looped in with the consolidated advisor-facing requirements list once it's compiled.</li>
+    </ul>
+  `},
+  {title:"Custodians", body:`
+    <ul>
+      <li><strong>NFS</strong> (National Financial Services) &mdash; primary custodian currently in scope; source of rep code data.</li>
+      <li><strong>Direct Business</strong> &mdash; accounts at other custodians (Schwab, etc.), out of scope until after the pilot.</li>
+      <li>Team needs to gather requirements to see if existing Schwab integration code/pattern can be reused; no full lifecycle plan yet for onboarding future custodians generically.</li>
+    </ul>
+  `},
+  {title:"Householding — Core Concepts", body:`
+    <ul>
+      <li><strong>Household</strong>: a logical grouping of one or more clients. Formed primarily by joint account ownership &rarr; falls back to shared address &rarr; defaults to single-person household if neither applies.</li>
+      <li><strong>Client TIN</strong>: primary identifier for a client entity record.</li>
+      <li><strong>Entity ID</strong>: identifier for a client record; duplicates arise across source systems (e.g. NFS and Schwab).</li>
+      <li><strong>Surviving Entity ID</strong>: the master entity ID chosen via survivorship rules once duplicates are merged. If it's null, the logic falls back to the base Entity ID before merging into the final table.</li>
+      <li><strong>Joint Identifier</strong>: built by concatenating surviving entity IDs of joint account holders.</li>
+    </ul>
+  `},
+  {title:"Known Householding Gaps", body:`
+    <ul>
+      <li>All households are currently missing some trusts &mdash; even though Tally, via the data team, can see them under the expected household. A sync/mapping gap.</li>
+      <li>Multigenerational/complex families: if parents share an account, the household forms correctly, but a child with no account of their own isn't naturally included.</li>
+      <li>"Complex family" scenarios beyond simple joint-account/joint-address cases aren't yet well handled.</li>
+      <li>Household vs. individual client naming can collide &mdash; a household and an individual client can look similar or identical in a list, and the system doesn't clearly distinguish between them. An advisor could accidentally select the wrong view, and since household-level figures differ from individual figures, this directly affects the net worth number reported.</li>
+      <li>Group Automation (Addepar-native) can't currently distinguish merging at the <strong>household</strong> level vs. the <strong>client</strong> level ("gracing" a household vs. "gracing" a client) &mdash; risk of an advisor accidentally affecting a client's net worth reporting.</li>
+      <li>Contact visibility is being treated as a separate workstream from core householding logic and was intentionally parked out of this discussion.</li>
+      <li>Household overrides: advisors can manually enter a missing household, or request a new household authorization via service ticket.</li>
+    </ul>
+  `},
+  {title:"Logic Enhancement vs. Utility vs. No Support", body:`
+    <p>The team sorts every householding gap into one of three buckets:</p>
+    <ul>
+      <li><strong>Handled natively by Addepar</strong> &mdash; if the vendor portal can already do it, that's the answer, no build needed.</li>
+      <li><strong>Logic Enhancement</strong> &mdash; a change to the core pipeline/matching logic itself.</li>
+      <li><strong>Utility</strong> &mdash; a custom-built tool for things Addepar can't handle natively (used cautiously &mdash; "we can build a utility to do anything," so it's easy to over-use this bucket without discipline).</li>
+    </ul>
+    <p>Related but distinct: some things are just a matter of what the <strong>advisor selects/enters manually in the portal UI</strong>, once it clearly supports it. Group Automation is treated as a separate, already-"done" piece &mdash; though what exactly it should be used for going forward still needs clarifying.</p>
+    <p>Current native (portal) capability is estimated to cover roughly <strong>20%</strong> of the need; the rest splits between logic enhancement and "handled otherwise" (utility/advisor UI). The decision between logic enhancement and utility should ultimately be based on <strong>business impact</strong>, not just ease of building.</p>
+    <p>Action items: compile a full list of what advisors need to do (loop in Kyle), evaluate what Addepar can already do natively against that list (rather than assuming), define the target end state, get a timeline for any utility build, and map the resulting workflow end to end.</p>
+  `},
+  {title:"Access & Authorization", body:`
+    <ul>
+      <li><strong>Rep Code</strong>: tied to an advisor; controls which accounts/households a user can see (from NFS/Snowflake data).</li>
+      <li><strong>Viewable Groups</strong>: mapping of users to rep codes for access control (also one of the 4 daily files).</li>
+      <li><strong>Portfolio</strong>: the accounts and households associated with a contact.</li>
+      <li><strong>Branch Relationships</strong>: advisor hierarchy, used alongside rep codes.</li>
+      <li>Biggest current issue: <strong>authorization requests</strong> &mdash; if a family wants account access, the team must manually edit and grant it.</li>
+      <li>Non-NFS data lacks a rep code from source, risking duplicate data and requiring manual overrides.</li>
+      <li>Long-term goal: move from "rep codes &rarr; users" to <strong>"users &rarr; households"</strong> to resolve these gaps.</li>
+      <li><strong>Manual Override</strong>: today's fix when logic misses an account/trust or gets a household wrong &mdash; tedious, a target for automation.</li>
+    </ul>
+  `},
+  {title:"Daily Data Pipeline", body:`
+    <p><strong>4 files sent daily to Addepar:</strong> Ownership Structure, Users, Viewable Groups, Contacts.</p>
+    <p>Internally, the pipeline is split into ~7 files/stages: Config, Ownership Stage, Ownership Structure, Users, Viewable Groups, Contacts, plus supporting staging files.</p>
+    <ul>
+      <li><strong>K3Pclean</strong>: cleaned source data layer. <strong>K3Psource</strong>: raw source data layer, possibly needed for account-pull logic on the initial config page (access still being requested).</li>
+      <li><strong>STM (Source-to-Target Mapping)</strong>: documents where each field originates and where it lands, e.g. mapping Salesforce's user/entity ID and rep code fields into target tables.</li>
+      <li>Core account logic: filter to active NFS accounts &rarr; identify latest account status via ROW_NUMBER logic &rarr; extract most recent client registration via a NOT EXISTS pattern &rarr; enrich with entity attributes (name, TIN, entity type) by joining the attribute table &rarr; produce two target tables (Addepar Account List, Ownership/Household mapping).</li>
+      <li>Files are sent as <strong>full snapshots</strong> every day if they don't match the existing file (not incremental diffs), with add/update/delete logic layered on top.</li>
+      <li>Config file's sources: <strong>AdvisorComplete, Salesforce, IDM</strong> &mdash; considered the "clean" source files.</li>
+      <li>Ownership Stage rules, in order: (1) group by client first/last name, (2) joint account ownership if present, (3) otherwise look up a secondary address, with individuals defaulting to a single-person household.</li>
+      <li>No visibility into upstream data generation has been provided since the team was onboarded &mdash; flagged as an open gap, ownership of which is still unclear.</li>
+      <li>Only NFS account status is used to determine closed accounts; closed accounts in NFS are excluded from the pull.</li>
+    </ul>
+    <p><strong>File delivery:</strong> a manual SFTP process is currently used; the goal is to automate delivery so Databricks-generated files land in the correct location automatically, removing the manual step. Addepar's own team ingests and validates the files independently. <strong>Ignite</strong> (SharePoint) is used for file-sharing when advisors migrate from Black Diamond to Addepar.</p>
+  `},
+  {title:"Tech Stack & Environment", body:`
+    <ul>
+      <li><strong>Databricks</strong> &mdash; primary platform for pipeline notebooks. Only one catalog currently exists; whether a separate catalog is needed for non-prod is still open.</li>
+      <li><strong>Genie</strong> &mdash; Databricks' AI assistant; can query/explain tables (like the final Addepar account list table) in plain language instead of writing code.</li>
+      <li><strong>Azure DevOps</strong> &mdash; confirmed as the CI/CD approach (not Jenkins or Terraform).</li>
+      <li><strong>GitHub</strong> &mdash; confirmed as source control (this was an open question early on, resolved in later notes); Jira and SonarQube adoption status still to confirm.</li>
+      <li><strong>Snowflake</strong> &mdash; source database joined with contact/account tables to resolve rep codes.</li>
+      <li><strong>Orchestration</strong>: Databricks runs the data platform; Airflow (AWS-based) is being brought in for overall orchestration; ADX (Azure Data Explorer) is being set up to pull from storage buckets, currently Databricks-only and not yet integrated with Airflow.</li>
+      <li><strong>Git / Copilot</strong> &mdash; Copilot integrates with Git for basic automated code review; code promotes only if checks pass. Databricks Genie's exact role in this check process is still being defined.</li>
+      <li>No write/edit permissions on production code today &mdash; current production changes are effectively data adjustments, not code changes. Team is standing up a dev environment + CI/CD pipeline first, then migrating into GitHub/Azure DevOps.</li>
+      <li>Multiple Databricks workspaces are needed for dev/testing but aren't fully set up yet; dev/test notebook access goes through Tally, then gets cloned into individual workspaces.</li>
+      <li>Access needed: Databricks, Customer Care, VPN, then the Databricks workspace itself. Addepar platform access has already been granted; Grace is coordinating the rest.</li>
+      <li>Unit test coverage needs a refactor strategy, described as mission-critical for how code gets promoted. QA handles testing; the full prod-change process is still TBD.</li>
+      <li>Monitoring/alerting/logging strategy is currently incomplete &mdash; needs clarification on where Databricks vs. Microsoft tooling plays a role.</li>
+    </ul>
+  `},
+  {title:"Service & Support Process", body:`
+    <ul>
+      <li>Servicing tickets go through a <strong>triage board</strong>, accessible via <strong>Kristina</strong>, who assigns them to data analysts/engineers.</li>
+      <li>Jira/ServiceNow tickets are frequently driven by householding logic issues &mdash; fixing the logic is expected to reduce ticket volume.</li>
+      <li>New stories get added for the entire scrum team.</li>
+      <li>3 product owner questions are currently being routed to the data team for requirements.</li>
+    </ul>
+  `},
+  {title:"Client Relationship Notes", body:`
+    <ul>
+      <li>Kestra has expressed hesitation about fully sharing files/data; initial assumption is they're "not ready to share." Once code moves to dev, no further permissions should be needed.</li>
+      <li><strong>Ignite</strong> &mdash; a SharePoint folder used for advisors transferring files during the Black Diamond &rarr; Addepar migration.</li>
+      <li>Grace (BA) acts as the bridge between developers and Kestra &mdash; translating requirements into Jira tickets, working with a scrum master.</li>
+    </ul>
+  `},
+  {title:"Working Philosophy & Culture Notes", body:`
+    <ul>
+      <li>Approach should be <strong>data-first</strong>: if the data doesn't show something is broken, don't assume it's broken &mdash; check whether the data fits the pipeline before acting.</li>
+      <li>When a household change is made, think broadly about downstream client-facing impact (performance data, transactions, analytics all feed the client experience).</li>
+      <li>Many product people on this program haven't worked at this implementation scale before &mdash; expect a consulting/teaching component around process and Agile practices.</li>
+      <li>Team is encouraged to be vocal, bring unique ideas, and raise findings early rather than sitting on them &mdash; a direct contrast with the feedback given about Gowri.</li>
+    </ul>
+  `},
+  {title:"Open Questions to Follow Up On", body:`
+    <ul>
+      <li>Do we need a separate Databricks catalog for non-prod environments?</li>
+      <li>What's the process and timeline to get K3Psource access, and dev/test notebook access via Tally?</li>
+      <li>Who decides &mdash; and by what criteria &mdash; whether a given householding gap is a logic enhancement, a utility build, or already covered by Group Automation?</li>
+      <li>Can Group Automation be configured to distinguish "grace the household" from "grace the client" to avoid advisor error?</li>
+      <li>What's the defined rule for multigenerational households where children have no account of their own?</li>
+      <li>Who owns upstream data visibility, and is there a plan to get it, given the team has had none since onboarding?</li>
+      <li>Who backfills the Business Analyst / requirements-gathering role after Diego's last day?</li>
+      <li>Is the September 10 deadline being revised, and what's a realistic target given current access/tooling gaps?</li>
+      <li>Final confirmation on Jira and SonarQube adoption status alongside Azure DevOps and GitHub.</li>
+    </ul>
+  `},
+];
+
+function renderNotes(){
+  const el = document.getElementById('notesList');
+  el.innerHTML = NOTES.map((n,i)=>`
+    <div class="noteSection" data-i="${i}">
+      <div class="noteHead">
+        <div class="htitle">${n.title}</div>
+        <div class="harrow">&#9656;</div>
+      </div>
+      <div class="noteBody">${n.body}</div>
+    </div>
+  `).join('');
+  el.querySelectorAll('.noteSection').forEach(sec=>{
+    sec.querySelector('.noteHead').addEventListener('click', ()=>{
+      sec.classList.toggle('open');
+    });
+  });
+}
+renderNotes();
 
 // ---------- EXAM ----------
 const QUESTIONS = [
@@ -508,7 +733,39 @@ const QUESTIONS = [
   {cat:"Logic vs. Tools", q:"A 'Logic Enhancement' means:", opts:["A change to the core pipeline logic itself","A one-off manual fix","A new hire","A UI color update"], a:0},
   {cat:"Logic vs. Tools", q:"Group Automation currently struggles to distinguish between:", opts:["Two different custodians","Merging at the household level vs. the client level","Test data and production data","Rep codes and branch codes"], a:1},
   {cat:"Tooling", q:"What does Genie do in Databricks?", opts:["Encrypts files automatically","Generates code/queries from plain-language questions","Sends daily emails to advisors","Replaces Azure DevOps"], a:1},
+
+  // Notes-based knowledge checks
+  {cat:"People", q:"Who is the Product Owner and wrote most of the existing documentation?", opts:["Tally","Diego","Grace","Rajesh Singh"], a:2},
+  {cat:"People", q:"Who owns the servicing team's triage board and assigns tickets?", opts:["Kristina","Sash","Arun Shanker","Brandon"], a:0},
+  {cat:"People", q:"Who flagged that the September 10 deadline is too tight?", opts:["Grace","Brandon","Diego","Gowri"], a:1},
+  {cat:"People", q:"What was the main critique of Gowri's work, according to the notes?", opts:["Her analysis was inaccurate","She missed deadlines constantly","She wasn't vocal about her findings and lacked write access","She refused to use Databricks"], a:2},
+  {cat:"Program", q:"What is the PRD's current status?", opts:["It's being rewritten this quarter","It's locked and can't be edited","It hasn't been created yet","It's owned by Addepar's team"], a:1},
+  {cat:"Access & Visibility", q:"What is described as the single biggest current issue on the program?", opts:["Slow onboarding of new firms","Authorization requests for account access","Databricks outages","Lack of Jira licenses"], a:1},
+  {cat:"Access & Visibility", q:"What is the long-term access goal the team is working toward?", opts:["Removing rep codes entirely with no replacement","Moving from 'rep codes to users' to 'users to households'","Giving every advisor full account access","Outsourcing access management to Addepar"], a:1},
+  {cat:"Pipeline & Files", q:"How is file delivery to Kestra currently handled?", opts:["Fully automated via Databricks","Manually placed into FTP/SFTP locations","Sent by email each morning","Not yet set up at all"], a:1},
+  {cat:"Pipeline & Files", q:"What known gap affects all households today?", opts:["Missing rep codes","Missing some trusts","Duplicate advisors","Incorrect TINs"], a:1},
+  {cat:"Logic vs. Tools", q:"What household gap involves multigenerational families?", opts:["Parents are excluded from all households","A child with no account of their own isn't naturally included","Joint accounts are duplicated","Trusts override household formation"], a:1},
+  {cat:"Logic vs. Tools", q:"What distinction can Group Automation currently NOT make?", opts:["NFS vs. Schwab accounts","Merging at the household level vs. the client level","Advisors vs. clients","Joint vs. individual accounts"], a:1},
+  {cat:"Tooling", q:"Why can't the team edit production code directly right now?", opts:["They don't know Databricks","No write/edit permissions on production code yet; a dev environment and CI/CD pipeline are being set up first","Kestra deleted the repository","Addepar disabled all edits"], a:1},
+  {cat:"Program", q:"What does Kestra currently feel hesitant about, per the notes?", opts:["Meeting weekly","Fully sharing files/data with the team","Using Addepar at all","Hiring more advisors"], a:1},
+  {cat:"Program", q:"What is 'Ignite' in the context of these notes?", opts:["A Databricks cluster","A SharePoint folder for advisor file transfers during migration","A Jira automation rule","An internal Kestra chatbot"], a:1},
+  {cat:"Logic vs. Tools", q:"What is the recommended working philosophy mentioned in the notes?", opts:["Move fast and fix things later","Data-first \u2014 don't assume something is broken unless the data shows it","Always escalate to leadership first","Prioritize UI polish over pipeline accuracy"], a:1},
+
+  // Additional knowledge checks from clarified notes
+  {cat:"People", q:"Who historically wrote ~90% of the program's documentation, and whose last working day creates a coverage gap?", opts:["Grace","Diego","Tally","Kristina"], a:1},
+  {cat:"People", q:"Who is the team compiling the advisor-facing requirements list for?", opts:["Brandon","Rajesh Singh","Kyle","Arun Shankar"], a:2},
+  {cat:"Tooling", q:"Which source control tool was confirmed in the later notes?", opts:["Bitbucket","GitHub","GitLab","Perforce"], a:1},
+  {cat:"Tooling", q:"What is Airflow being brought in for?", opts:["Code review","Overall pipeline orchestration (AWS-based)","Rep code mapping","Household deduplication"], a:1},
+  {cat:"Tooling", q:"What are the three source systems that feed the Config file?", opts:["Snowflake, Jira, SonarQube","AdvisorComplete, Salesforce, IDM","NFS, Schwab, Fidelity","Databricks, Airflow, ADX"], a:1},
+  {cat:"Household Concepts", q:"If a Surviving Entity ID is null, what does the logic fall back to?", opts:["The base Entity ID","The rep code","A newly generated random ID","The joint identifier"], a:0},
+  {cat:"Household Concepts", q:"What is the correct order of the Ownership Stage household-forming rules?", opts:["Address, then name, then joint account","Client name, then joint account, then secondary address","Joint account, then rep code, then name","TIN, then address, then name"], a:1},
+  {cat:"Logic vs. Tools", q:"What risk does the household-vs-client naming collision create?", opts:["Duplicate rep codes","An advisor could view the wrong net worth figure by picking the wrong (household vs. client) view","Files fail to send to Addepar","Accounts get double-billed"], a:1},
+  {cat:"Logic vs. Tools", q:"How can advisors currently fix a missing household?", opts:["They cannot; only engineers can fix it","Manually enter it, or request a new household authorization via service ticket","Only Addepar support can do it","It auto-resolves within 24 hours"], a:1},
+  {cat:"Pipeline & Files", q:"What logic is used to identify the latest account status per account?", opts:["A simple date filter","ROW_NUMBER logic (closed vs. not closed)","A manual override table","Genie-generated queries"], a:1},
+  {cat:"Access & Visibility", q:"What gap around upstream data has existed since the team was onboarded?", opts:["No visibility into how upstream data is generated","No access to Snowflake at all","No rep codes for any advisor","No access to Jira"], a:0},
 ];
+
+document.getElementById('qTotalLabel').textContent = QUESTIONS.length;
 
 let order = [];
 let idx = 0;
