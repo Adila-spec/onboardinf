@@ -456,7 +456,7 @@ const TERMS = [
   {cat:"Custodians", term:"NFS", def:"National Financial Services \u2014 the primary custodian currently in scope, and the source of the rep code data used for access control."},
 
   // Household concepts
-  {cat:"Household Concepts", term:"Household", def:"A logical grouping of one or more clients. Formed primarily by joint account ownership; falls back to shared address, or defaults to a single-person household."},
+  {cat:"Household Concepts", term:"Household", def:"A relationship structure used to organize clients, accounts, trusts, and joint ownership relationships. Household membership does not automatically determine portfolio visibility or aggregation behavior."},
   {cat:"Household Concepts", term:"TIN (Client TIN)", def:"Tax ID Number \u2014 the primary identifier for a client entity record."},
   {cat:"Household Concepts", term:"Entity ID", def:"An identifier for a client record. The same person can end up with multiple entity IDs if they exist in multiple source systems (e.g. NFS and Schwab)."},
   {cat:"Household Concepts", term:"Surviving Entity ID", def:"The single master entity ID chosen, via survivorship rules, to represent a client once duplicate TINs/entity IDs across systems are merged."},
@@ -465,7 +465,7 @@ const TERMS = [
   // Access & visibility
   {cat:"Access & Visibility", term:"Rep Code", def:"A code tied to an advisor. Drives which accounts and households a user is allowed to see, sourced from NFS/Snowflake data."},
   {cat:"Access & Visibility", term:"Viewable Groups", def:"The mapping of users to rep codes that controls account and household visibility. Also the name of one of the 4 daily files sent to Addepar."},
-  {cat:"Access & Visibility", term:"Portfolio", def:"The set of accounts and households associated with a given contact."},
+  {cat:"Access & Visibility", term:"Portfolio", def:"A collection of accounts visible to a user. Portfolio visibility, account authorization, and portfolio aggregation may be managed independently."},
   {cat:"Access & Visibility", term:"Branch Relationships", def:"The advisor hierarchy structure, used alongside rep codes to work out access when a single rep code isn't enough."},
 
   // Pipeline & files
@@ -485,6 +485,15 @@ const TERMS = [
   {cat:"Logic vs. Tools", term:"Logic Enhancement", def:"A change made to the core pipeline/logic itself, as opposed to a workaround or manual process."},
   {cat:"Logic vs. Tools", term:"Utility", def:"A custom-built tool created to handle something Addepar can't do natively, when a full logic enhancement isn't justified."},
 
+  // Product & Householding
+  {cat:"Product & Householding", term:"Group", def:"The primary Addepar mechanism for creating aggregated portfolio views. Multiple entities, households, trusts, and accounts can be combined into a single rollup without changing ownership records."},
+  {cat:"Product & Householding", term:"Aggregation", def:"The process of combining account values into a single portfolio view. In Addepar, aggregation typically occurs through Groups rather than visibility permissions."},
+  {cat:"Product & Householding", term:"Visibility vs Aggregation", def:"A key product distinction. A user may be allowed to view an account without that account contributing to portfolio totals or overall household values."},
+  {cat:"Product & Householding", term:"Advanced Advisor B2 Role", def:"The recommended permission model for managing contact visibility, account access, and authorized account relationships."},
+  {cat:"Product & Householding", term:"Temporary Portfolio Rollup", def:"A proposed enhancement that would allow users to aggregate accounts for analysis without permanently changing household structures or ownership relationships."},
+  {cat:"Product & Householding", term:"Contact-Based Access", def:"An access model where visibility is driven by account authorization and contact permissions rather than household membership alone."},
+  {cat:"Product & Householding", term:"Householding Workshop", def:"A planned product workshop focused on defining household rules, visibility behavior, groups, permissions, rollups, ownership structures, and advisor management processes."},
+  {cat:"Product & Householding", term:"User-to-Household Mapping", def:"A proposed model that aligns users directly to households rather than relying solely on rep codes. Estimated implementation timeline is approximately two weeks assuming no major blockers."},
   // Tooling
   {cat:"Tooling", term:"Databricks", def:"The primary platform used to build the data notebooks and pipelines that generate the daily files."},
   {cat:"Tooling", term:"Genie", def:"Databricks' AI assistant \u2014 lets you ask questions in plain language and get generated code/queries instead of writing them by hand."},
@@ -692,6 +701,67 @@ const NOTES = [
       <li>Final confirmation on Jira and SonarQube adoption status alongside Azure DevOps and GitHub.</li>
     </ul>
   `},
+  {
+  title:"Product Decisions: Householding & Aggregation",
+  body:`
+    <p>
+      One of the largest open product discussions is the distinction between
+      <strong>visibility</strong>, <strong>householding</strong>, and
+      <strong>aggregation</strong>.
+    </p>
+
+    <ul>
+      <li>All accounts can generally be loaded into Addepar and displayed.</li>
+      <li>The challenge is determining which accounts should contribute to aggregate portfolio values.</li>
+      <li>Today, the primary way to create aggregated views is through <strong>Groups</strong>.</li>
+      <li>Users can view individual account performance without rolling those accounts into a combined portfolio view.</li>
+      <li>A future enhancement could allow temporary portfolio rollups without requiring permanent household changes.</li>
+    </ul>
+
+    <p>
+      Product leadership discussed the idea that people living together do not
+      always want the same portfolio visibility.
+    </p>
+
+    <ul>
+      <li>Spouses may share a joint account but keep individual accounts private.</li>
+      <li>Trust assets may require separate visibility permissions.</li>
+      <li>Clients may want account access without affecting aggregate net-worth calculations.</li>
+      <li>Contact permissions should remain separate from portfolio aggregation.</li>
+    </ul>
+
+    <p>
+      The preferred access model is moving toward
+      <strong>Contact-Based Access</strong> using the
+      <strong>Advanced Advisor B2 Role</strong>.
+    </p>
+
+    <ul>
+      <li>Contacts only see authorized accounts.</li>
+      <li>New account access requires authorization.</li>
+      <li>Visibility should not automatically imply portfolio aggregation.</li>
+    </ul>
+
+    <p>
+      These decisions will be formalized during the
+      <strong>Householding Workshop</strong>.
+    </p>
+
+    <ul>
+      <li>Household structure</li>
+      <li>Group strategy</li>
+      <li>User permissions</li>
+      <li>Visibility rules</li>
+      <li>Portfolio rollups</li>
+      <li>Advisor-managed vs Home Office-managed workflows</li>
+    </ul>
+
+    <p>
+      User-to-Household Mapping is estimated at roughly
+      <strong>2 weeks</strong> assuming no unexpected blockers.
+    </p>
+  `
+},
 ];
 
 function renderNotes(){
@@ -753,6 +823,64 @@ const QUESTIONS = [
   {cat:"Program", q:"What is 'Ignite' in the context of these notes?", opts:["A Databricks cluster","A SharePoint folder for advisor file transfers during migration","A Jira automation rule","An internal Kestra chatbot"], a:1},
   {cat:"Logic vs. Tools", q:"What is the recommended working philosophy mentioned in the notes?", opts:["Move fast and fix things later","Data-first \u2014 don't assume something is broken unless the data shows it","Always escalate to leadership first","Prioritize UI polish over pipeline accuracy"], a:1},
 
+  {
+  cat:"Product & Householding",
+  q:"What is the primary method for creating aggregated portfolio views in Addepar today?",
+  opts:["Rep Codes","Groups","TINs","Joint Identifiers"],
+  a:1
+},
+{
+  cat:"Product & Householding",
+  q:"Can a user potentially see an account without that account contributing to portfolio totals?",
+  opts:["No","Only through Salesforce","Yes, visibility and aggregation are separate concepts","Only for NFS accounts"],
+  a:2
+},
+{
+  cat:"Product & Householding",
+  q:"What is the purpose of a Group?",
+  opts:["Assign rep codes","Generate TINs","Create aggregated portfolio rollups","Load files into SFTP"],
+  a:2
+},
+{
+  cat:"Product & Householding",
+  q:"Which permission model is currently the preferred approach for contact visibility?",
+  opts:["Branch Relationships","Advanced Advisor B2","Rep Code Mapping","Viewable Groups"],
+  a:1
+},
+{
+  cat:"Product & Householding",
+  q:"What product topic will be finalized during the Householding Workshop?",
+  opts:["Laptop issuance","Databricks licensing","Household rules, permissions, and aggregation behavior","VPN configuration"],
+  a:2
+},
+{
+  cat:"Product & Householding",
+  q:"What is the estimated timeline for User-to-Household Mapping work?",
+  opts:["2 days","2 weeks","2 months","6 months"],
+  a:1
+},
+{
+  cat:"Product & Householding",
+  q:"Why might spouses not belong in a single aggregated portfolio?",
+  opts:[
+    "Because joint accounts are not supported",
+    "Because households always require separate rep codes",
+    "They may want individual accounts to remain private while sharing joint accounts",
+    "Because Addepar cannot display married clients"
+  ],
+  a:2
+},
+{
+  cat:"Product & Householding",
+  q:"What future enhancement was discussed for account rollups?",
+  opts:[
+    "Automatic rep code generation",
+    "Temporary portfolio aggregation without changing household structures",
+    "Eliminating Groups",
+    "Removing contact permissions"
+  ],
+  a:1
+},
   // Additional knowledge checks from clarified notes
   {cat:"People", q:"Who historically wrote ~90% of the program's documentation, and whose last working day creates a coverage gap?", opts:["Grace","Diego","Tally","Kristina"], a:1},
   {cat:"People", q:"Who is the team compiling the advisor-facing requirements list for?", opts:["Brandon","Rajesh Singh","Kyle","Arun Shankar"], a:2},
