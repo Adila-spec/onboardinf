@@ -370,15 +370,17 @@
 <div class="wrap">
 
   <div class="plate">
-    <div class="eyebrow"><span>CASE FILE NO. K-2026-17</span><span>KESTRA &rarr; ADDEPAR PROGRAM</span></div>
-    <h1>Onboarding Dossier</h1>
-    <div class="sub">A field guide to the terms, files, and people you'll hear about in your first weeks &mdash; then a checkpoint exam to see what's sticking.</div>
+   <h1>Addepar Program Operating Guide</h1>
+   <div class="sub">
+     A practical guide to understanding the Addepar rollout,
+     team objectives, product decisions, industry context,
+     current roadblocks, and my role supporting the program.
   </div>
 
   <div class="tabs">
-    <div class="tab active" data-view="learn">Learn</div>
-    <div class="tab" data-view="notes">Notes</div>
-    <div class="tab" data-view="exam">Exam</div>
+   <div class="tab active" data-view="learn">Operating Guide</div>
+   <div class="tab" data-view="notes">Program Status</div>
+   <div class="tab" data-view="exam">Knowledge Check</div>
   </div>
 
   <div class="stage">
@@ -432,80 +434,348 @@
 
 <script>
 const TERMS = [
-  // People
-  {cat:"People", term:"Grace", def:"The Product Owner. Coordinates Addepar and Databricks access requests, and will share the SharePoint onboarding-progress tracker once a laptop is issued."},
-  {cat:"People", term:"Tally", def:"Data Analyst on the Kestra data team. The person to ask for file/notebook access, workspace clones, and status codes."},
-  {cat:"People", term:"Diego", def:"Business Analyst \u2014 historically wrote roughly 90% of existing documentation and bridges developers and Kestra. His last working day is the same day as the team's training session; who backfills the requirements-gathering role after that is still unresolved."},
-  {cat:"People", term:"Rajesh Singh", def:"The Kestra-side manager."},
-  {cat:"People", term:"Arun Shankar", def:"Incoming senior/technical lead (\u201ctech guru\u201d), relocating from India to Dallas full-time. Will help with design documents and workflow diagrams, and champion dev efficiency."},
-  {cat:"People", term:"Gowri (Gowripriya Patibandala)", def:"Outgoing analyst (visa issues). Praised for strong analysis, but criticized for not being vocal enough about her findings, and she lacked write access to act on what she found. Also flagged as unclear on where certain source files originate."},
-  {cat:"People", term:"Shashidhar Babu Devarakondu (\u201cSashee\u201d)", def:"Leads the data quality / production pipeline / tech stack discussions \u2014 data quality checks, CI/CD planning, Databricks ramp-up."},
-  {cat:"People", term:"Kristina", def:"Manages the servicing team's triage board \u2014 reviews incoming tickets and assigns them to data analysts/engineers."},
-  {cat:"People", term:"Kyle", def:"To be looped in with the full, consolidated list of everything the team wants an advisor to be able to do \u2014 the advisor-facing requirements list."},
-  {cat:"People", term:"Brandon", def:"Has flagged that the September 10 deadline is too tight given current access and tooling gaps."},
 
-  // Program
-  {cat:"Program", term:"Kestra", def:"The client: a wealth management firm implementing Addepar as its next-gen client portal and performance platform."},
-  {cat:"Program", term:"Addepar", def:"The platform Kestra is moving to, for reporting, performance, and as the client-facing portal. Replaces eMoney and Black Diamond."},
-  {cat:"Program", term:"eMoney / Black Diamond", def:"The legacy platforms being replaced by Addepar."},
-  {cat:"Program", term:"Pilot Firms", def:"The initial 17 firms in scope, limited to NFS custodian data. New firms onboard at roughly 5\u20136 per month over the ~4\u20135 month program."},
-  {cat:"Program", term:"Direct Business", def:"Accounts held at custodians other than NFS (e.g. Schwab). Out of scope during the pilot, planned to come in around October."},
+/* =========================
+   PROGRAM MISSION
+========================= */
 
-  // Custodians
-  {cat:"Custodians", term:"Custodian", def:"The institution that actually holds a client's assets (e.g. NFS, Schwab). Determines which data pipeline and rules apply to an account."},
-  {cat:"Custodians", term:"NFS", def:"National Financial Services \u2014 the primary custodian currently in scope, and the source of the rep code data used for access control."},
+{
+  cat:"Program Mission",
+  term:"October Go-Live",
+  def:"The primary objective of the Addepar program. Deliver a production-ready advisor and client experience that includes onboarding, visibility, authentication, data feeds, and operational support processes."
+},
 
-  // Household concepts
-  {cat:"Household Concepts", term:"Household", def:"A relationship structure used to organize clients, accounts, trusts, and joint ownership relationships. Household membership does not automatically determine portfolio visibility or aggregation behavior."},
-  {cat:"Household Concepts", term:"TIN (Client TIN)", def:"Tax ID Number \u2014 the primary identifier for a client entity record."},
-  {cat:"Household Concepts", term:"Entity ID", def:"An identifier for a client record. The same person can end up with multiple entity IDs if they exist in multiple source systems (e.g. NFS and Schwab)."},
-  {cat:"Household Concepts", term:"Surviving Entity ID", def:"The single master entity ID chosen, via survivorship rules, to represent a client once duplicate TINs/entity IDs across systems are merged."},
-  {cat:"Household Concepts", term:"Joint Identifier", def:"An ID built by concatenating the surviving entity IDs of joint account holders \u2014 used to construct joint-household relationships."},
+{
+  cat:"Program Mission",
+  term:"Advisor Experience",
+  def:"Create a modern, intuitive advisor and client experience that becomes a competitive differentiator for Kestra."
+},
 
-  // Access & visibility
-  {cat:"Access & Visibility", term:"Rep Code", def:"A code tied to an advisor. Drives which accounts and households a user is allowed to see, sourced from NFS/Snowflake data."},
-  {cat:"Access & Visibility", term:"Viewable Groups", def:"The mapping of users to rep codes that controls account and household visibility. Also the name of one of the 4 daily files sent to Addepar."},
-  {cat:"Access & Visibility", term:"Portfolio", def:"A collection of accounts visible to a user. Portfolio visibility, account authorization, and portfolio aggregation may be managed independently."},
-  {cat:"Access & Visibility", term:"Branch Relationships", def:"The advisor hierarchy structure, used alongside rep codes to work out access when a single rep code isn't enough."},
+{
+  cat:"Program Mission",
+  term:"Hyper-Personalized Experience",
+  def:"The goal of allowing advisors and clients to view the accounts, households, relationships, and assets most meaningful to them in a personalized manner."
+},
 
-  // Pipeline & files
-  {cat:"Pipeline & Files", term:"Ownership Structure (file)", def:"One of the 4 daily files sent to Addepar; defines the final household groupings."},
-  {cat:"Pipeline & Files", term:"Users (file)", def:"One of the 4 daily files; contains records for Kestra staff, advisors, and end clients."},
-  {cat:"Pipeline & Files", term:"Contacts (file)", def:"One of the 4 daily files; each account gets one designated primary contact."},
-  {cat:"Pipeline & Files", term:"Config File", def:"The internal staging file that pulls in source data from AdvisorComplete, Salesforce, and IDM \u2014 the starting point of the pipeline. Produces two target tables: the Addepar Account List and the Ownership/Household mapping."},
-  {cat:"Pipeline & Files", term:"Ownership Stage (file)", def:"Applies the household-forming rules, in order: (1) group by client first/last name, (2) joint account ownership if present, (3) otherwise look up a secondary address, with individuals defaulting to a single-person household."},
-  {cat:"Pipeline & Files", term:"K3Pclean", def:"The layer where already-cleaned source data lives, used to build the pipeline's tables."},
-  {cat:"Pipeline & Files", term:"K3Psource", def:"A more raw underlying source data layer, possibly needed for account-pull logic on the initial config page; access to it was still being requested."},
-  {cat:"Pipeline & Files", term:"STM (Source-to-Target Mapping)", def:"Documentation showing exactly where each field comes from and where it lands in the target tables."},
+{
+  cat:"Program Mission",
+  term:"Standardization",
+  def:"Creating common specifications and data structures across NFS, A360, Blue Spring, Direct Business, and future feeds so information behaves consistently."
+},
 
-  // Logic vs tools
-  {cat:"Logic vs. Tools", term:"Householding Logic", def:"The set of rules that decides how clients get grouped into households. The single biggest source of gaps and service tickets on the program."},
-  {cat:"Logic vs. Tools", term:"Manual Override", def:"The current manual fix used when automated logic misses an account or trust, or gets a household wrong. Described as tedious \u2014 a prime target for automation."},
-  {cat:"Logic vs. Tools", term:"Group Automation", def:"An Addepar-native feature that can merge accounts/households automatically, but currently can't distinguish merging at the household level vs. the client level \u2014 a live open gap."},
-  {cat:"Logic vs. Tools", term:"Logic Enhancement", def:"A change made to the core pipeline/logic itself, as opposed to a workaround or manual process."},
-  {cat:"Logic vs. Tools", term:"Utility", def:"A custom-built tool created to handle something Addepar can't do natively, when a full logic enhancement isn't justified."},
+{
+  cat:"Program Mission",
+  term:"Portal Differentiation",
+  def:"A strategic objective to make the Addepar portal one of Kestra's strongest competitive advantages for advisor acquisition and retention."
+},
 
-  // Product & Householding
-  {cat:"Product & Householding", term:"Group", def:"The primary Addepar mechanism for creating aggregated portfolio views. Multiple entities, households, trusts, and accounts can be combined into a single rollup without changing ownership records."},
-  {cat:"Product & Householding", term:"Aggregation", def:"The process of combining account values into a single portfolio view. In Addepar, aggregation typically occurs through Groups rather than visibility permissions."},
-  {cat:"Product & Householding", term:"Visibility vs Aggregation", def:"A key product distinction. A user may be allowed to view an account without that account contributing to portfolio totals or overall household values."},
-  {cat:"Product & Householding", term:"Advanced Advisor B2 Role", def:"The recommended permission model for managing contact visibility, account access, and authorized account relationships."},
-  {cat:"Product & Householding", term:"Temporary Portfolio Rollup", def:"A proposed enhancement that would allow users to aggregate accounts for analysis without permanently changing household structures or ownership relationships."},
-  {cat:"Product & Householding", term:"Contact-Based Access", def:"An access model where visibility is driven by account authorization and contact permissions rather than household membership alone."},
-  {cat:"Product & Householding", term:"Householding Workshop", def:"A planned product workshop focused on defining household rules, visibility behavior, groups, permissions, rollups, ownership structures, and advisor management processes."},
-  {cat:"Product & Householding", term:"User-to-Household Mapping", def:"A proposed model that aligns users directly to households rather than relying solely on rep codes. Estimated implementation timeline is approximately two weeks assuming no major blockers."},
-  // Tooling
-  {cat:"Tooling", term:"Databricks", def:"The primary platform used to build the data notebooks and pipelines that generate the daily files."},
-  {cat:"Tooling", term:"Genie", def:"Databricks' AI assistant \u2014 lets you ask questions in plain language and get generated code/queries instead of writing them by hand."},
-  {cat:"Tooling", term:"Azure DevOps", def:"Used for CI/CD around the Databricks codebase (the team is not using Jenkins or Terraform)."},
-  {cat:"Tooling", term:"Snowflake", def:"Source database joined with contact/account tables to resolve rep codes and access mappings."},
-  {cat:"Tooling", term:"Ignite", def:"A SharePoint folder used by advisors to transfer files during the Black Diamond \u2192 Addepar migration."},
-  {cat:"Tooling", term:"IDM", def:"A source system referenced for rep code and relationship mapping, and one of the feeds into the Config file. The exact product behind the name is still unconfirmed."},
-  {cat:"Tooling", term:"ADX (Azure Data Explorer)", def:"Being set up to pull data from storage buckets. Currently Databricks-only work; not yet integrated with Airflow."},
-  {cat:"Tooling", term:"Airflow", def:"Open-source orchestration tool being brought in (AWS-hosted) to handle overall pipeline orchestration, separate from Databricks itself."},
-  {cat:"Tooling", term:"AdvisorComplete", def:"One of the three \u201cclean\u201d source systems (alongside Salesforce and IDM) that feed the Config file."},
-  {cat:"Tooling", term:"SonarQube", def:"Code quality tool mentioned alongside Jira as part of the tech stack; adoption status is still an open item to confirm."},
-  {cat:"Tooling", term:"Bitbucket vs. GitHub", def:"Source control was an open question early on; later notes confirm GitHub as the source control standard, alongside Azure DevOps for CI/CD."},
+{
+  cat:"Program Mission",
+  term:"Learn The Ecosystem",
+  def:"A key team objective. Understand the advisor business model, servicing model, data flows, integrations, platform capabilities, and industry trends before attempting to solve larger problems."
+},
+
+/* =========================
+   INDUSTRY CONTEXT
+========================= */
+
+{
+  cat:"Industry Context",
+  term:"Why Householding Matters",
+  def:"Householding is one of the most important capabilities in wealth management because advisors need to organize relationships between individuals, trusts, businesses, families, and joint owners while controlling visibility and reporting."
+},
+
+{
+  cat:"Industry Context",
+  term:"Commonwealth Catalyst",
+  def:"The combination of Commonwealth and LPL created advisor movement across the industry. Many advisors evaluated alternatives, creating opportunities for Kestra to attract new business through superior advisor experiences and householding capabilities."
+},
+
+{
+  cat:"Industry Context",
+  term:"RIA",
+  def:"Registered Investment Advisor. Independent advisory businesses that often operate outside traditional broker dealer structures."
+},
+
+{
+  cat:"Industry Context",
+  term:"Blue Spring",
+  def:"A Kestra-affiliated growth organization that acquires or supports independent RIAs and brings those firms into the Kestra ecosystem, custody relationships, and technology stack."
+},
+
+{
+  cat:"Industry Context",
+  term:"Blue Spring Growth",
+  def:"One of Kestra's largest growth opportunities. Blue Spring firms bring advisors, assets, clients, ownership structures, and data sources that must be integrated into Kestra platforms."
+},
+
+{
+  cat:"Industry Context",
+  term:"PE Growth Model",
+  def:"Private equity firms acquire advisory businesses and their assets under management. Scale, consolidation, and technology become major competitive advantages."
+},
+
+{
+  cat:"Industry Context",
+  term:"Brokerage Accounts",
+  def:"Accounts where advisors are compensated through trading activity or commissions."
+},
+
+{
+  cat:"Industry Context",
+  term:"Advisory Accounts",
+  def:"Accounts where advisors are compensated through an ongoing management fee based on assets under management."
+},
+
+{
+  cat:"Industry Context",
+  term:"AUM",
+  def:"Assets Under Management. The total value of assets managed by advisors. Often used to calculate advisory revenue and fees."
+},
+
+{
+  cat:"Industry Context",
+  term:"AUA",
+  def:"Assets Under Advisement. Assets for which advisors provide guidance but may not directly manage."
+},
+
+{
+  cat:"Industry Context",
+  term:"Fiduciary Advisor",
+  def:"An advisor who is legally obligated to act in the client's best interest."
+},
+
+{
+  cat:"Industry Context",
+  term:"Broker Dealer",
+  def:"The organization that provides advisors with compliance, custody relationships, operational support, and technology platforms."
+},
+
+{
+  cat:"Industry Context",
+  term:"KPWS",
+  def:"Kestra Private Wealth Services. A white-glove advisor channel made up primarily of W2 advisors and larger advisory practices."
+},
+
+{
+  cat:"Industry Context",
+  term:"KFI",
+  def:"Kestra Financial affiliated advisors and firms leveraging Kestra's technology and operational platforms."
+},
+
+{
+  cat:"Industry Context",
+  term:"1099 Advisor",
+  def:"An independent advisor that operates as a contractor rather than an employee."
+},
+
+{
+  cat:"Industry Context",
+  term:"W2 Advisor",
+  def:"An advisor employed directly by an organization."
+},
+
+/* =========================
+   MAJOR WORKSTREAMS
+========================= */
+
+{
+  cat:"Workstreams",
+  term:"Householding",
+  def:"The process of organizing people, accounts, trusts, businesses, and relationships into structures that enable reporting, permissions, and visibility."
+},
+
+{
+  cat:"Workstreams",
+  term:"Direct Business",
+  def:"Assets that do not arrive through traditional NFS custody feeds, including insurance products, annuities, and externally sourced investments."
+},
+
+{
+  cat:"Workstreams",
+  term:"A360",
+  def:"A key onboarding and integration workstream involving ownership structures, account relationships, and historical account information."
+},
+
+{
+  cat:"Workstreams",
+  term:"Historical Data",
+  def:"Loading historical balances, transactions, deposits, withdrawals, and performance information needed for advisor reporting."
+},
+
+{
+  cat:"Workstreams",
+  term:"Authentication",
+  def:"The effort focused on MFA, login flows, advisor onboarding, client enrollment, and general portal access."
+},
+
+{
+  cat:"Workstreams",
+  term:"Production Readiness",
+  def:"The activities required to move solutions from development into stable production operation."
+},
+
+{
+  cat:"Workstreams",
+  term:"Household Management Tool",
+  def:"A future capability intended to help users manage household relationships, visibility, ownership, and account organization."
+},
+
+/* =========================
+   PRODUCT DECISIONS
+========================= */
+
+{
+  cat:"Product Decisions",
+  term:"Visibility vs Aggregation",
+  def:"Users may need access to accounts without having those accounts contribute to household totals or portfolio calculations."
+},
+
+{
+  cat:"Product Decisions",
+  term:"Groups",
+  def:"The current Addepar mechanism used to create aggregate portfolio views. Without a Group, accounts remain separate for reporting."
+},
+
+{
+  cat:"Product Decisions",
+  term:"Temporary Aggregation",
+  def:"A desired enhancement where users could temporarily aggregate accounts for analysis without permanently changing household structures."
+},
+
+{
+  cat:"Product Decisions",
+  term:"Advanced Advisor B2",
+  def:"The preferred permissioning model for managing contact visibility and authorized account access."
+},
+
+{
+  cat:"Product Decisions",
+  term:"Contact-Based Access",
+  def:"A model where visibility is driven primarily through contact permissions and authorizations instead of household membership alone."
+},
+
+{
+  cat:"Product Decisions",
+  term:"Portfolio Value Exclusion",
+  def:"An open requirement allowing users to view accounts while preventing those accounts from contributing to aggregate portfolio values."
+},
+
+{
+  cat:"Product Decisions",
+  term:"User-to-Household Mapping",
+  def:"A future access model that aligns users directly to households rather than relying primarily on rep-code relationships."
+},
+
+{
+  cat:"Product Decisions",
+  term:"Householding Workshop",
+  def:"A planned product workshop focused on permissions, visibility, aggregation, ownership relationships, and household structures."
+},
+
+/* =========================
+   CURRENT ROADBLOCKS
+========================= */
+
+{
+  cat:"Roadblocks",
+  term:"Historical Data Dependency",
+  def:"Several portal features cannot be fully validated until historical balances and performance information are available."
+},
+
+{
+  cat:"Roadblocks",
+  term:"Direct Business Ownership",
+  def:"Ownership models for Direct Business assets are still being defined because many accounts lack traditional rep-code structures."
+},
+
+{
+  cat:"Roadblocks",
+  term:"Addepar Aggregation Limitation",
+  def:"Accounts can be viewed individually but cannot easily be temporarily aggregated without creating Groups."
+},
+
+{
+  cat:"Roadblocks",
+  term:"Authentication Friction",
+  def:"Pilot users continue to encounter confusion related to MFA, authenticator apps, and login workflows."
+},
+
+{
+  cat:"Roadblocks",
+  term:"Householding Decisions",
+  def:"Several visibility, ownership, aggregation, and permission decisions remain unresolved."
+},
+
+{
+  cat:"Roadblocks",
+  term:"Data Standardization",
+  def:"Blue Spring, Direct Business, and future data sources often arrive in different formats and require standardization."
+},
+
+{
+  cat:"Roadblocks",
+  term:"Advisor Visibility Questions",
+  def:"Advisors frequently need explanations for why an account appears, does not appear, or displays differently than expected."
+},
+
+{
+  cat:"Roadblocks",
+  term:"Addepar Dependencies",
+  def:"Certain capabilities depend on vendor functionality, timelines, and product decisions outside of Kestra's control."
+},
+
+{
+  cat:"Roadblocks",
+  term:"A360 Validation",
+  def:"Account mapping, ownership validation, and onboarding activities must be completed before rollout."
+},
+
+/* =========================
+   MY ROLE
+========================= */
+
+{
+  cat:"My Role",
+  term:"Understand The Ecosystem",
+  def:"Learn how advisors operate, how data moves, how households are structured, and how servicing supports the platform."
+},
+
+{
+  cat:"My Role",
+  term:"Requirements Discovery",
+  def:"Identify gaps, edge cases, ownership questions, visibility issues, and unresolved business decisions."
+},
+
+{
+  cat:"My Role",
+  term:"Householding Analysis",
+  def:"Help understand how permissions, contacts, ownership structures, aggregation, groups, and visibility interact."
+},
+
+{
+  cat:"My Role",
+  term:"Data Understanding",
+  def:"Learn where information originates, how it reaches Databricks, how it is transformed, and how it appears within Addepar."
+},
+
+{
+  cat:"My Role",
+  term:"Product Context",
+  def:"Understand why product decisions are being made and how advisors, clients, servicing teams, and operations are affected."
+},
+
+{
+  cat:"My Role",
+  term:"AI Opportunities",
+  def:"Identify opportunities where AI can simplify advisor support, household management, servicing workflows, and operational tasks."
+},
+
+{
+  cat:"My Role",
+  term:"Speaking The Language",
+  def:"Become fluent in advisor terminology, wealth management concepts, householding language, and project-specific vocabulary."
+}
 ];
 
 const CATS = [...new Set(TERMS.map(t=>t.cat))];
